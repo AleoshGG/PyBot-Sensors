@@ -1,19 +1,19 @@
 import threading
-from Sensors.gps import GPSReader
-from Sensors.hx711 import HX711Reader
-from Sensors.camera import CameraReader
+from Sensors.GPS import GPSReader
+from Sensors.HX711 import HX711Reader
+# from Sensors.camera import CameraReader
 
 if __name__ == '__main__':
     # Instanciar lectores
     gps = GPSReader()
     hx = HX711Reader()
-    cam = CameraReader()
+    # cam = CameraReader()
 
     # Crear hilos
     threads = [
         threading.Thread(target=gps.start, name='GPS'),
         threading.Thread(target=hx.start, name='HX711'),
-        threading.Thread(target=cam.start, name='Camera'),
+        #threading.Thread(target=cam.start, name='Camera'),
     ]
 
     # Iniciar hilos

@@ -1,12 +1,12 @@
 import threading
 import serial
 import pynmea2
-from MQTT.toServerMQTT import MQTTClient
-from FetchAPI.fetchAPI import FetchAPI
+# from MQTT.toServerMQTT import MQTTClient
+# from FetchAPI.fetchAPI import FetchAPI
 
 class GPSReader:
     def __init__(self):
-        self.mqtt = MQTTClient()
+        self.mqtt = 0 #MQTTClient()
 
     def start(self):
         try:
@@ -26,7 +26,7 @@ class GPSReader:
                         'alt': msg.altitude
                     }
                     print(f"[GPS] {data}")
-                    self.mqtt.send(data)
-                    FetchAPI.send(data)
+                    # self.mqtt.send(data)
+                    # FetchAPI.send(data)
             except Exception as e:
                 print(f"[GPS] Error: {e}")
