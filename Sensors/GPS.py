@@ -2,12 +2,12 @@ import threading
 import time
 import serial
 import pynmea2
-# from MQTT.toServerMQTT import MQTTClient
+from MQTT.connection import RabbitMQPublisher
 # from FetchAPI.fetchAPI import FetchAPI
 
 class GPSReader:
     def __init__(self):
-        self.mqtt = 0 #MQTTClient()
+        self.mqtt = RabbitMQPublisher()
 
     @staticmethod
     def knots_to_kmph(knots: float) -> float:
@@ -48,8 +48,10 @@ class GPSReader:
                 if 'lat' in last_data and 'lon' in last_data:
                     print(f"[GPS] {last_data}")
 
-                    # self.mqtt.send(data)
+                    self.mqtt.send(payload=last_data, routing_key="neo")
                     # FetchAPI.send(data)
+                
+                time.sleep(1)
             except Exception as e:
                 print(f"[GPS] Error: {e}")
                 time.sleep(1)
