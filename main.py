@@ -1,22 +1,28 @@
-import serial
-import pynmea2
+import threading
+from Sensors.gps import GPSReader
+from Sensors.hx711 import HX711Reader
+from Sensors.camera import CameraReader
 
-def read_gps():
-    # Open serial connection to GPS module
-    gps_serial = serial.Serial("/dev/serial0", baudrate=9600, timeout=1)
+if __name__ == '__main__':
+    # Instanciar lectores
+    gps = GPSReader()
+    hx = HX711Reader()
+    cam = CameraReader()
 
-    while True:
-        try:
-            line = gps_serial.readline().decode("ascii", errors="replace")
-            if line.startswith("$GPGGA"):
-                msg = pynmea2.parse(line)
-                print(f"Latitude: {msg.latitude}, Longitude: {msg.longitude}")
-                print(f"Altitude: {msg.altitude} {msg.altitude_units}")
-        except pynmea2.ParseError as e:
-            print(f"Parse error: {e}")
-        except KeyboardInterrupt:
-            print("Exiting...")
-            break
+    # Crear hilos
+    threads = [
+        threading.Thread(target=gps.start, name='GPS'),
+        threading.Thread(target=hx.start, name='HX711'),
+        threading.Thread(target=cam.start, name='Camera'),
+    ]
 
-if __name__ == "__main__":
-    read_gps()
+    # Iniciar hilos
+    for t in threads:
+        t.daemon = True  # Permite que el programa termine aunque queden hilos activos
+        t.start()
+
+    try:
+        while True:
+            pass  # Otras tareas de supervisión
+    except KeyboardInterrupt:
+        print("[MAIN] Saliendo...")
