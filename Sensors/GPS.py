@@ -1,4 +1,5 @@
 import threading
+import time
 import serial
 import pynmea2
 # from MQTT.toServerMQTT import MQTTClient
@@ -8,6 +9,10 @@ class GPSReader:
     def __init__(self):
         self.mqtt = 0 #MQTTClient()
 
+    @staticmethod
+    def knots_to_kmph(knots: float) -> float:
+        return knots * 1.852    
+
     def start(self):
         try:
             ser = serial.Serial("/dev/serial0", 9600, timeout=1)
@@ -15,18 +20,36 @@ class GPSReader:
             print(f"[GPS] No se pudo abrir puerto: {e}")
             return
 
+        last_data = {}
+
         while True:
             try:
                 line = ser.readline().decode('ascii', errors='replace')
-                if line.startswith('$GPGGA'):
+
+                if line.startswith('$GPRMC'):
                     msg = pynmea2.parse(line)
-                    data = {
-                        'lat': msg.latitude,
-                        'lon': msg.longitude,
-                        'alt': msg.altitude
-                    }
-                    print(f"[GPS] {data}")
+                    last_data['lat'] = msg.latitude
+                    last_data['lon'] = msg.longitude
+                    speed_knots = msg.spd_over_grnd or 0.0
+                    last_data['spd'] = round(self.knots_to_kmph(speed_knots), 2)
+                    last_data['date'] = msg.datestamp.strftime('%Y-%m-%d') if msg.datestamp else None
+                    last_data['UTC'] = msg.timestamp.strftime('%H:%M:%S') if msg.timestamp else None
+
+                elif line.startswith('$GPGGA'):
+                    msg = pynmea2.parse(line)
+                    last_data['alt'] = msg.altitude
+                    # asegurarse de que sea entero
+                    try:
+                        last_data['sats'] = int(msg.num_sats)
+                    except ValueError:
+                        last_data['sats'] = None
+
+                # Mostrar y enviar datos solo si tenemos coordenadas
+                if 'lat' in last_data and 'lon' in last_data:
+                    print(f"[GPS] {last_data}")
+
                     # self.mqtt.send(data)
                     # FetchAPI.send(data)
             except Exception as e:
                 print(f"[GPS] Error: {e}")
+                time.sleep(1)
