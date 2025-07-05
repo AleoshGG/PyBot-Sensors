@@ -1,9 +1,12 @@
 import threading
 from Sensors.GPS import GPSReader
 from Sensors.HX711 import HX711Reader
+from dotenv import load_dotenv
 # from Sensors.camera import CameraReader
 
 if __name__ == '__main__':
+    # Cargar las variables de enorno
+    load_dotenv()
     # Instanciar lectores
     gps = GPSReader()
     hx = HX711Reader()

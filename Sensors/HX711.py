@@ -1,3 +1,4 @@
+import os
 import time
 from hx711 import HX711
 from MQTT.connection import RabbitMQPublisher
@@ -5,6 +6,7 @@ from MQTT.connection import RabbitMQPublisher
 
 class HX711Reader:
     def __init__(self):
+        self.prototype_id = os.getenv("ID_PROTOTYPE")
         self.mqtt = RabbitMQPublisher()
         self.hx = HX711(20, 21)
         self.hx.reset()
@@ -17,7 +19,7 @@ class HX711Reader:
             try:
                 raw = sum(self.hx.get_raw_data(times=10))/10
                 weight = (raw - self.offset)/7050.0
-                data = {'weight_g': weight}
+                data = {'prototype_id': self.prototype_id,'weight_g': weight}
                 print(f"[HX711] {data}")
                 self.mqtt.send(data, routing_key="hx")
                 #FetchAPI.send(data)

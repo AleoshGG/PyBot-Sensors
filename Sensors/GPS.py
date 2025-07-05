@@ -2,12 +2,14 @@ import threading
 import time
 import serial
 import pynmea2
+import os
 from MQTT.connection import RabbitMQPublisher
 # from FetchAPI.fetchAPI import FetchAPI
 
 class GPSReader:
     def __init__(self):
         self.mqtt = RabbitMQPublisher()
+        self.prototype_id = os.getenv("ID_PROTOTYPE")
 
     @staticmethod
     def knots_to_kmph(knots: float) -> float:
@@ -28,6 +30,7 @@ class GPSReader:
 
                 if line.startswith('$GPRMC'):
                     msg = pynmea2.parse(line)
+                    last_data['prototype_id'] = self.prototype_id
                     last_data['lat'] = msg.latitude
                     last_data['lon'] = msg.longitude
                     speed_knots = msg.spd_over_grnd or 0.0
