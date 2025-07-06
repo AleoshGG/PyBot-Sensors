@@ -56,7 +56,7 @@ class CameraReader:
                         "cls": int(box.cls[0]),
                         "conf": float(box.conf[0])
                     })
-                print(f"[Camera] DEtecciones: {detections}")
+                print(f"[Camera] Detecciones: {detections}")
 
                 ann = results[0].plot()
                 img = cv2.resize(ann, (320,240))
@@ -70,8 +70,8 @@ class CameraReader:
                     }
                     self.mqtt.send(payload, routing_key='cam')
 
-                cv2.imshow("Async Fast YOLOv11", img)
-                if cv2.waitKey(1)==27: break
+                #cv2.imshow("Async Fast YOLOv11", img)
+                #if cv2.waitKey(1)==27: break
         except Exception as e:
             print(f"[Camera] Error: {e}")
             time.sleep(1)

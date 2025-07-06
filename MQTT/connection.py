@@ -38,7 +38,7 @@ class RabbitMQPublisher:
                 routing_key=routing_key,
                 body=message
             )
-            print(f"[RabbitMQ] Enviado {routing_key}:{message}")
+            # print(f"[RabbitMQ] Enviado {routing_key}:{message}")
         except Exception as e:
             print(f"[RabbitMQ] Error publicando mensaje: {e}")
 
