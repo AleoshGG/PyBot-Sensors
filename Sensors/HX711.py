@@ -26,7 +26,10 @@ class HX711Reader:
                 data = {'prototype_id': self.prototype_id,'weight_g': weight}
                 print(f"[HX711] {data}")
                 self.mqtt.send(data, routing_key="hx")
-                self.serviceRegister.registerWeigh(weight)
+                
+                if weight >= 0:
+                    self.serviceRegister.registerWeigh(weight)
+
                 self.hx.power_down()          
                 time.sleep(5)      
                 self.hx.power_up()
