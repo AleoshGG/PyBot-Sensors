@@ -9,15 +9,15 @@ if __name__ == '__main__':
     # Cargar las variables de enorno
     load_dotenv()
     # Instanciar lectores
-    gps = GPSReader()
+    # gps = GPSReader()
     hx = HX711Reader()
-    cam = CameraReader()
+    # cam = CameraReader()
 
     # Crear hilos
     threads = [
-        threading.Thread(target=gps.start, name='GPS'),
+      #  threading.Thread(target=gps.start, name='GPS'),
         threading.Thread(target=hx.start, name='HX711'),
-        threading.Thread(target=cam.start, name='Camera'),
+       # threading.Thread(target=cam.start, name='Camera'),
     ]
 
     # Iniciar hilos

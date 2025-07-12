@@ -9,13 +9,20 @@ RABBITMQ_HOST = os.getenv('RABBITMQ_HOST', 'localhost')
 EXCHANGE_NAME = 'amq.topic'
 EXCHANGE_TYPE = 'topic'
 DEFAULT_ROUTING_KEY = os.getenv('MQTT_TOPIC', 'sensors.info')
+USER = os.getenv('RABBITMQ_USER')
+PASS = os.getenv('RABBITMQ_PASS')
 
 class RabbitMQPublisher:
     def __init__(self):
         try:
             self.connection = pika.BlockingConnection(
-                pika.ConnectionParameters(host=RABBITMQ_HOST)
+                pika.ConnectionParameters(
+                    host=RABBITMQ_HOST, 
+                    credentials=pika.PlainCredentials(
+                        username=USER, 
+                        password=PASS))
             )
+
             self.channel = self.connection.channel()
             self.channel.exchange_declare(
                 exchange=EXCHANGE_NAME,
