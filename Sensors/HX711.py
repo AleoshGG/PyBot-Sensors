@@ -2,13 +2,14 @@ import os
 import time
 from hx711 import HX711
 from MQTT.connection import RabbitMQPublisher
-# from FetchAPI.fetchAPI import FetchAPI
+from API.registerPeriods import RegisterPeriods
 
 class HX711Reader:
-    def __init__(self):
+    def __init__(self, serviceRegister: RegisterPeriods):
         self.prototype_id = os.getenv("ID_PROTOTYPE")
         self.mqtt = RabbitMQPublisher()
         self.hx = HX711(20, 21)
+        self.serviceRegister = serviceRegister
         # self.hx.reset()
         # time.sleep(0.1)
         # raw = self.hx.get_raw_data(times=10)
@@ -25,7 +26,7 @@ class HX711Reader:
                 data = {'prototype_id': self.prototype_id,'weight_g': weight}
                 print(f"[HX711] {data}")
                 self.mqtt.send(data, routing_key="hx")
-                #FetchAPI.send(data)
+                self.serviceRegister.registerWeigh(weight)
                 self.hx.power_down()          
                 time.sleep(5)      
                 self.hx.power_up()

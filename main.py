@@ -3,14 +3,24 @@ from Sensors.Camera import CameraReader
 from Sensors.GPS import GPSReader
 from Sensors.HX711 import HX711Reader
 from dotenv import load_dotenv
+from API.registerPeriods import RegisterPeriods
 # from Sensors.camera import CameraReader
 
 if __name__ == '__main__':
     # Cargar las variables de enorno
     load_dotenv()
+    r = RegisterPeriods()
+    
+    firstPeriod = r.statusPeriod()
+
+    if firstPeriod:
+        r.createNewPeriod()
+    else: 
+        print("Calcula lo anterior")
+        
     # Instanciar lectores
     # gps = GPSReader()
-    hx = HX711Reader()
+    hx = HX711Reader(serviceRegister=r)
     # cam = CameraReader()
 
     # Crear hilos
