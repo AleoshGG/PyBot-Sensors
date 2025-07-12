@@ -57,6 +57,15 @@ class RegisterPeriods:
 
         self.serciceSensors.registerWeightData(d_body)
 
+    
+    def createVoidReading(self):
+        d_body = {
+            "period_id": self.actual_period_id,
+            "distance_traveled": 0.0,
+            "weight_waste": 0.0,
+        }
+        self.serviceWorkPeriods.createNewReading(d_body)
+
 """
 if __name__ == "__main__":
     r = RegisterPeriods()

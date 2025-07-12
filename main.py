@@ -15,9 +15,10 @@ if __name__ == '__main__':
 
     if firstPeriod:
         r.createNewPeriod()
+        r.createVoidReading()
     else: 
         print("Calcula lo anterior")
-        
+
     # Instanciar lectores
     # gps = GPSReader()
     hx = HX711Reader(serviceRegister=r)

@@ -22,6 +22,15 @@ class WorkPeriodService:
         except requests.RequestException as e:
             print(f"[FetchAPI] Error creando recurso: {e}")
             return resp.json()
+        
+    def createNewReading(self, payload: dict) -> requests.Response:
+        try:
+            resp = self.session.post(self.base_url + "/readings", json = payload)
+            resp.raise_for_status()
+            return resp.json()
+        except requests.RequestException as e:
+            print(f"[FetchAPI] Error creando recurso: {e}")
+            return resp.json()
     
     """ 
     
