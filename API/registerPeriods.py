@@ -12,6 +12,7 @@ class RegisterPeriods:
         self.prototype_id = os.getenv("ID_PROTOTYPE")
         self.actual_period_id = 0
         self.last_period_id = 0
+        self.last_hour_period = ''
     
     def statusPeriod(self) -> bool: 
         res = self.serviceWorkPeriods.getLastHourPeriod()
@@ -19,6 +20,8 @@ class RegisterPeriods:
         if res.get('last_period').get('period_id') == 0:
             return True
         
+        self.last_period_id = res.get('last_period').get('period_id')
+        self.last_hour_period = res.get('last_period').get('last_hour')
         return False
     
     def createNewPeriod(self): 
@@ -66,6 +69,27 @@ class RegisterPeriods:
         }
         self.serviceWorkPeriods.createNewReading(d_body)
 
+    def completeLastPeriod(self):
+        id =  str(self.last_period_id)
+        res = self.serviceWorkPeriods.getDistanceAndWeight(id)
+        print(res)
+
+        res1 = self.serviceWorkPeriods.updateLastPeriod(
+            self.last_hour_period,
+            id=str(self.last_period_id))
+        print(res1)
+
+        d_body = {
+            "period_id": self.last_period_id,
+            "distance_traveled": res.get('last_reading').get('distance_traveled'),
+            "weight_waste": res.get('last_reading').get('weight_waste'),
+        }
+
+        res = self.serviceWorkPeriods.updateLastReadig(d_body)
+        print(res)
+        self.createNewPeriod()
+        self.createVoidReading()
+
 """
 if __name__ == "__main__":
     r = RegisterPeriods()
@@ -73,5 +97,7 @@ if __name__ == "__main__":
     if r.statusPeriod():
         print("Hacer el primer periodo")
         r.createNewPeriod()
+        r.createVoidReading()
     else:
-        print("Proceder a calcular el ultimo periodo")"""
+        print("Proceder a calcular el ultimo periodo")
+        r.completeLastPeriod()"""

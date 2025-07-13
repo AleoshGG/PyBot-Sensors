@@ -18,8 +18,7 @@ if __name__ == '__main__':
         r.createVoidReading()
     else: 
         print("Calcula lo anterior")
-        r.createNewPeriod()
-        r.createVoidReading()
+        r.completeLastPeriod()
 
     # Instanciar lectores
     # gps = GPSReader()

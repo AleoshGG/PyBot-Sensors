@@ -14,6 +14,15 @@ class WorkPeriodService:
             print(f"[FetchAPI] Error listando datos: {e}")
             return None
         
+    def getDistanceAndWeight(self, id) -> requests.Response:
+        try:
+            resp = self.session.get(self.base_url + "/readingsGlobal?id=" + id)
+            resp.raise_for_status()
+            return resp.json()
+        except requests.RequestException as e:
+            print(f"[FetchAPI] Error listando datos: {e}")
+            return None
+        
     def createNewPeriod(self, payload: dict) -> requests.Response:
         try:
             resp = self.session.post(self.base_url + "/", json = payload)
@@ -32,29 +41,20 @@ class WorkPeriodService:
             print(f"[FetchAPI] Error creando recurso: {e}")
             return resp.json()
     
-    """ 
-    
-
-    def update(self, id: int, payload: dict) -> bool:
-        PUT /resource/{id}
+    def updateLastPeriod(self, endHour, id) -> requests.Response:
         try:
-            resp = self.session.put(self._url(str(id)), json=payload)
+            resp = self.session.patch(self.base_url + "/?endHour=" + endHour + "&id=" + id)
             resp.raise_for_status()
             return True
         except requests.RequestException as e:
             print(f"[FetchAPI] Error actualizando id={id}: {e}")
             return False
-
-    def delete(self, id: int) -> bool:
-        DELETE /resource/{id}
+    
+    def updateLastReadig(self, payload: dict) -> requests.Response:
         try:
-            resp = self.session.delete(self._url(str(id)))
+            resp = self.session.put(self.base_url + "/", json = payload)
             resp.raise_for_status()
             return True
         except requests.RequestException as e:
-            print(f"[FetchAPI] Error eliminando id={id}: {e}")
-            return False """
-           
-if __name__ == "__main__":
-    serviceAPI = WorkPeriodService()
-    print(serviceAPI.getLastHourPeriod())
+            print(f"[FetchAPI] Error actualizando id={id}: {e}")
+            return False
