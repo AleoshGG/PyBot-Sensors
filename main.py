@@ -21,7 +21,7 @@ if __name__ == '__main__':
         r.completeLastPeriod()
 
     # Instanciar lectores
-    # gps = GPSReader()
+    gps = GPSReader(serviceRegister=r)
     hx = HX711Reader(serviceRegister=r)
     # cam = CameraReader()
 

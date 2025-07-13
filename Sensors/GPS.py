@@ -4,10 +4,12 @@ import serial
 import pynmea2
 import os
 from MQTT.connection import RabbitMQPublisher
+from API.registerPeriods import RegisterPeriods
 # from FetchAPI.fetchAPI import FetchAPI
 
 class GPSReader:
-    def __init__(self):
+    def __init__(self, serviceRegister: RegisterPeriods):
+        self.register = serviceRegister
         self.mqtt = RabbitMQPublisher()
         self.prototype_id = os.getenv("ID_PROTOTYPE")
 
@@ -52,9 +54,9 @@ class GPSReader:
                     print(f"[GPS] {last_data}")
 
                     self.mqtt.send(payload=last_data, routing_key="neo")
-                    # FetchAPI.send(data)
+                    self.register.registerGPS(last_data)
                 
-                time.sleep(1)
+                time.sleep(5)
             except Exception as e:
                 print(f"[GPS] Error: {e}")
                 time.sleep(1)

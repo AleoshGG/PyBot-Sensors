@@ -60,6 +60,22 @@ class RegisterPeriods:
 
         self.serciceSensors.registerWeightData(d_body)
 
+    def registerGPS(self, data: dict):
+    
+        
+        d_body = {
+            "gps_data_id": 0,
+            "period_id": self.actual_period_id | 0,
+            "latitude": data.get("lat") | 0.0,
+            "longitude": data.get("lon") | 0.0,
+            "altitude": data.get("alt") | 0.0,
+            "speed": data.get("spd") | 0.0,
+            "date_gps": data.get("date") | '2015-07-13',
+            "hour_UTC": data.get('UTC') | '2025-07-12T20:14:07.057608+00:00'
+        }
+
+        self.serciceSensors.registerWeightData(d_body)
+
     
     def createVoidReading(self):
         d_body = {
