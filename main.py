@@ -27,7 +27,7 @@ if __name__ == '__main__':
 
     # Crear hilos
     threads = [
-      #  threading.Thread(target=gps.start, name='GPS'),
+        threading.Thread(target=gps.start, name='GPS'),
         threading.Thread(target=hx.start, name='HX711'),
        # threading.Thread(target=cam.start, name='Camera'),
     ]

@@ -65,16 +65,16 @@ class RegisterPeriods:
         
         d_body = {
             "gps_data_id": 0,
-            "period_id": self.actual_period_id | 0,
-            "latitude": data.get("lat") | 0.0,
-            "longitude": data.get("lon") | 0.0,
-            "altitude": data.get("alt") | 0.0,
-            "speed": data.get("spd") | 0.0,
-            "date_gps": data.get("date") | '2015-07-13',
-            "hour_UTC": data.get('UTC') | '2025-07-12T20:14:07.057608+00:00'
+            "period_id": self.actual_period_id or 0,
+            "latitude": data.get("lat") or 0.0,
+            "longitude": data.get("lon") or 0.0,
+            "altitude": data.get("alt") or 0.0,
+            "speed": data.get("spd") or 0.0,
+            "date_gps": data.get("date") or '2015-07-13',
+            "hour_UTC": data.get('UTC') or '2025-07-12T20:14:07.057608+00:00'
         }
 
-        self.serciceSensors.registerWeightData(d_body)
+        self.serciceSensors.registerGPSData(d_body)
 
     
     def createVoidReading(self):
