@@ -4,6 +4,7 @@ from Sensors.GPS import GPSReader
 from Sensors.HX711 import HX711Reader
 from dotenv import load_dotenv
 from API.registerPeriods import RegisterPeriods
+from Sensors.WasteHandler import WasteHandler
 # from Sensors.camera import CameraReader
 
 if __name__ == '__main__':
@@ -19,6 +20,8 @@ if __name__ == '__main__':
     else: 
         print("Calcula lo anterior")
         r.completeLastPeriod()
+
+    handler = WasteHandler(service_register=r)
 
     # Instanciar lectores
     gps = GPSReader(serviceRegister=r)
