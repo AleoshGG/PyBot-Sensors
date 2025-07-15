@@ -5,7 +5,7 @@ from Sensors.HX711 import HX711Reader
 from dotenv import load_dotenv
 from API.registerPeriods import RegisterPeriods
 from Sensors.WasteHandler import WasteHandler
-# from Sensors.camera import CameraReader
+from Sensors.Camera import CameraReader
 
 if __name__ == '__main__':
     # Cargar las variables de enorno
@@ -25,14 +25,14 @@ if __name__ == '__main__':
 
     # Instanciar lectores
     gps = GPSReader(serviceRegister=r)
-    hx = HX711Reader(serviceRegister=r)
-    # cam = CameraReader()
+    hx = HX711Reader(serviceRegister=r, h=handler)
+    cam = CameraReader(h=handler)
 
     # Crear hilos
     threads = [
         threading.Thread(target=gps.start, name='GPS'),
         threading.Thread(target=hx.start, name='HX711'),
-       # threading.Thread(target=cam.start, name='Camera'),
+        threading.Thread(target=cam.start, name='Camera'),
     ]
 
     # Iniciar hilos
