@@ -71,7 +71,7 @@ class RegisterPeriods:
             "altitude": data.get("alt") or 0.0,
             "speed": data.get("spd") or 0.0,
             "date_gps": data.get("date") or '2015-07-13',
-            "hour_UTC": data.get('UTC') or '2025-07-12T20:14:07.057608+00:00'
+            "hour_UTC": data.get("date") + "T" + data.get('UTC')+"+00:00" or '2025-07-12T20:14:07.057608+00:00'
         }
 
         self.serciceSensors.registerGPSData(d_body)
