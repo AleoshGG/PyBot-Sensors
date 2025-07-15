@@ -3,12 +3,13 @@ import os
 import threading, cv2, torch
 import time
 from ultralytics import YOLO
-
+from Sensors.WasteHandler import WasteHandler
 from MQTT.connection import RabbitMQPublisher
 
 class CameraReader:
-    def __init__(self):
+    def __init__(self, h: WasteHandler):
         self.mqtt = RabbitMQPublisher()
+        self.handler = h
         self.prototype_id = os.getenv("ID_PROTOTYPE")
         self.model  = YOLO("models/YOLOv11.pt")  # o donde tengas tu modelo entrenado
         self.model.fuse()  # optimización opcional
@@ -57,6 +58,7 @@ class CameraReader:
                         "conf": float(box.conf[0])
                     })
                 print(f"[Camera] Detecciones: {detections}")
+                self.handler.process_detections(detections)
 
                 ann = results[0].plot()
                 img = cv2.resize(ann, (320,240))

@@ -13,6 +13,8 @@ class RegisterPeriods:
         self.actual_period_id = 0
         self.last_period_id = 0
         self.last_hour_period = ''
+        self.w_id_CANS = 0
+        self.w_id_PET = 0
     
     def statusPeriod(self) -> bool: 
         res = self.serviceWorkPeriods.getLastHourPeriod()
@@ -105,6 +107,31 @@ class RegisterPeriods:
         print(res)
         self.createNewPeriod()
         self.createVoidReading()
+
+    def createWasteCollection(self, waste_id):
+        d_body = {
+            "waste_collection_id": 0,
+            "period_id": self.actual_period_id,
+            "amount": 0,
+            "waste_id": waste_id
+        }
+
+        res = self.serciceSensors.registerWasteCollection(d_body)
+        if waste_id == 1:
+            self.w_id_PET = res.get('data').get('waste_collection_id')
+        else:
+            self.w_id_CANS = res.get('data').get('waste_collection_id')
+    
+    def updateWasteCollection(self, waste_collection_id: int):
+        res = self.serciceSensors.updateWasteCollection(waste_collection_id)
+        print(res)
+
+    def getIdWasteCollectionPET(self):
+        return self.w_id_PET
+    
+    def getIdWasteCollectionCANS(self):
+        return self.w_id_CANS
+
 
 """
 if __name__ == "__main__":

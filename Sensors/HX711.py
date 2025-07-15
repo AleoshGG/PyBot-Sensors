@@ -3,13 +3,15 @@ import time
 from hx711 import HX711
 from MQTT.connection import RabbitMQPublisher
 from API.registerPeriods import RegisterPeriods
+from Sensors.WasteHandler import WasteHandler
 
 class HX711Reader:
-    def __init__(self, serviceRegister: RegisterPeriods):
+    def __init__(self, serviceRegister: RegisterPeriods, h: WasteHandler):
         self.prototype_id = os.getenv("ID_PROTOTYPE")
         self.mqtt = RabbitMQPublisher()
         self.hx = HX711(20, 21)
         self.serviceRegister = serviceRegister
+        self.handler = h
         # self.hx.reset()
         # time.sleep(0.1)
         # raw = self.hx.get_raw_data(times=10)
@@ -29,6 +31,7 @@ class HX711Reader:
                 
                 if weight >= 0:
                     self.serviceRegister.registerWeigh(weight)
+                    self.handler.process_weight(weight)
 
                 self.hx.power_down()          
                 time.sleep(5)      

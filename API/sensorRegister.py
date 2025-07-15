@@ -22,3 +22,21 @@ class SensorRegisterService:
         except requests.RequestException as e:
             print(f"[FetchAPI] Error creando recurso: {e}")
             return resp.json()
+        
+    def registerWasteCollection(self, payload: dict) -> requests.Response:
+        try:
+            resp = self.session.post(self.base_url + "/waste", json = payload)
+            resp.raise_for_status()
+            return resp.json()
+        except requests.RequestException as e:
+            print(f"[FetchAPI] Error creando recurso: {e}")
+            return resp.json()
+        
+    def updateWasteCollection(self, w_id) -> requests.Response:
+        try:
+            resp = self.session.patch(self.base_url + "/?Id=" + str(w_id))
+            resp.raise_for_status()
+            return resp.json()
+        except requests.RequestException as e:
+            print(f"[FetchAPI] Error actualizando recurso: {e}")
+            return resp.json()
