@@ -57,7 +57,7 @@ class RegisterPeriods:
             "weight_data_id": 0,
             "period_id": self.actual_period_id,
             "Hour_period": hour_period,
-            "Weight": weight,
+            "Weight": weight or 0.0
         }
 
         self.serciceSensors.registerWeightData(d_body)
