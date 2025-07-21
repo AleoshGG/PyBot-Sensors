@@ -19,12 +19,12 @@ class Backup:
 
         if connection:
             print("Se hace el backup")
-            """ try:
-                resp = self.session.post(self.base_url + "/")
+            try:
+                resp = self.session.get(self.base_url + "/")
                 resp.raise_for_status()
                 print(resp.json())
             except requests.RequestException as e:
                 print(f"[FetchAPI] Error al hacer el backup: {e}")
-                print(resp.json()) """
+                print(resp.json())
         else:
             print("Baackup no disponible")
