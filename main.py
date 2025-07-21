@@ -4,6 +4,7 @@ from Sensors.GPS import GPSReader
 from Sensors.HX711 import HX711Reader
 from dotenv import load_dotenv
 from API.registerPeriods import RegisterPeriods
+from API.backup import Backup
 from Sensors.WasteHandler import WasteHandler
 from Sensors.Camera import CameraReader
 
@@ -28,11 +29,14 @@ if __name__ == '__main__':
     hx = HX711Reader(serviceRegister=r, h=handler)
     cam = CameraReader(h=handler)
 
+    # Backup
+    backup = Backup()
     # Crear hilos
     threads = [
         threading.Thread(target=gps.start, name='GPS'),
         threading.Thread(target=hx.start, name='HX711'),
         threading.Thread(target=cam.start, name='Camera'),
+        threading.Thread(target=backup.start, name='Backup'),
     ]
 
     # Iniciar hilos
