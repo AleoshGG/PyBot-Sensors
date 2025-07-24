@@ -1,51 +1,21 @@
-import threading
-from Sensors.Camera import CameraReader
-from Sensors.GPS import GPSReader
-from Sensors.HX711 import HX711Reader
 from dotenv import load_dotenv
 from API.registerPeriods import RegisterPeriods
-from API.backup import Backup
-from Sensors.WasteHandler import WasteHandler
-from Sensors.Camera import CameraReader
+from raspberry_controller import RaspberryController
 
 if __name__ == '__main__':
-    # Cargar las variables de enorno
+    # Cargar variables de entorno
     load_dotenv()
-    r = RegisterPeriods()
-    
-    firstPeriod = r.statusPeriod()
 
-    if firstPeriod:
+    # Inicializar servicio de periodos
+    r = RegisterPeriods()
+    first_period = r.statusPeriod()
+
+    if first_period:
         r.createNewPeriod()
         r.createVoidReading()
-    else: 
-        print("Calcula lo anterior")
+    else:
         r.completeLastPeriod()
 
-    handler = WasteHandler(service_register=r)
-
-    # Instanciar lectores
-    gps = GPSReader(serviceRegister=r)
-    hx = HX711Reader(serviceRegister=r, h=handler)
-    cam = CameraReader(h=handler)
-
-    # Backup
-    backup = Backup()
-    # Crear hilos
-    threads = [
-        threading.Thread(target=gps.start, name='GPS'),
-        threading.Thread(target=hx.start, name='HX711'),
-        threading.Thread(target=cam.start, name='Camera'),
-        threading.Thread(target=backup.start, name='Backup'),
-    ]
-
-    # Iniciar hilos
-    for t in threads:
-        t.daemon = True  # Permite que el programa termine aunque queden hilos activos
-        t.start()
-
-    try:
-        while True:
-            pass  # Otras tareas de supervisión
-    except KeyboardInterrupt:
-        print("[MAIN] Saliendo...")
+    # Inicializar controlador que maneja ESP32 y relé, sensores y backup
+    controller = RaspberryController(service_periods=r)
+    controller.start()  # lanza internamente lectura de GPS, HX711, Cámara y Backup, además de la comunicación con ESP32 y relé
