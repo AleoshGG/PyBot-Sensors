@@ -24,7 +24,7 @@ class RelayManager:
         self.monitor_thread = None
         
         GPIO.setmode(GPIO.BCM)
-        GPIO.setup(self.pin, GPIO.OUT, initial=GPIO.HIGH)  # HIGH = relé apagado
+        GPIO.setup(self.pin, GPIO.OUT, initial=GPIO.LOW)  # LOW = relé apagado
         print(f"[RELAY] Inicializado en pin {pin}, duración {duration}s")
         
         # Iniciar hilo monitor
@@ -159,7 +159,7 @@ def main():
     
     # Configuración del relé
     relay_pin = int(os.getenv('RELAY_PIN', '17'))
-    relay_duration = float(os.getenv('RELAY_DURATION', '12'))
+    relay_duration = float(os.getenv('RELAY_DURATION', '6'))
     
     print(f"🚀 Iniciando programa de prueba...")
     print(f"📍 Pin GPIO: {relay_pin}")
