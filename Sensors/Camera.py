@@ -11,7 +11,7 @@ class CameraReader:
         self.mqtt = RabbitMQPublisher()
         self.handler = h
         self.prototype_id = os.getenv("ID_PROTOTYPE")
-        self.model  = YOLO("models/YOLOv11.pt")  # o donde tengas tu modelo entrenado
+        self.model  = YOLO("models/best2.pt")  # o donde tengas tu modelo entrenado
         self.model.fuse()  # optimización opcional
         self.frame_lock = threading.Lock()
         self.latest_frame = None
