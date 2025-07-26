@@ -116,11 +116,11 @@ class RaspberryController:
 
         # Parámetros relé
         relay_pin = int(os.getenv('RELAY_PIN', '17'))
-        relay_duration = float(os.getenv('RELAY_DURATION', '12'))
+        relay_duration = float(os.getenv('RELAY_DURATION', '6'))
         self.relay = RelayManager(relay_pin, relay_duration)
 
         # Umbral detección
-        self.CAM_CONF_THRESHOLD = float(os.getenv('CAM_CONF_THRESHOLD', '0.7'))
+        self.CAM_CONF_THRESHOLD = float(os.getenv('CAM_CONF_THRESHOLD', '0.8'))
 
         # Evento de paro y cola de comandos
         self.stop_event = threading.Event()
