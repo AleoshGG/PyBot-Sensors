@@ -116,7 +116,7 @@ class RaspberryController:
 
         # Parámetros relé
         relay_pin = int(os.getenv('RELAY_PIN', '17'))
-        relay_duration = float(os.getenv('RELAY_DURATION', '6'))
+        relay_duration = float(os.getenv('RELAY_DURATION', '3'))
         self.relay = RelayManager(relay_pin, relay_duration)
 
         # Umbral detección
@@ -134,7 +134,7 @@ class RaspberryController:
         self.gps = GPSReader(serviceRegister=self.register_service)
         self.hx = HX711Reader(serviceRegister=self.register_service, h=self.handler)
         self.cam = CameraReader(h=self.handler)
-        #self.backup = Backup()
+        self.backup = Backup()
 
     def _hook_detections(self):
         """Envuelve process_detections para enviar comando y disparar relé."""
@@ -178,12 +178,6 @@ class RaspberryController:
 
     def start(self):
         """Arranca todos los hilos necesarios y maneja KeyboardInterrupt."""
-        # Inicializar período
-        if self.register_service.statusPeriod():
-            self.register_service.createNewPeriod()
-            self.register_service.createVoidReading()
-        else:
-            self.register_service.completeLastPeriod()
 
         # Crear hilos
         threads = [
@@ -191,7 +185,7 @@ class RaspberryController:
             threading.Thread(target=self.gps.start,     name='GPS',       daemon=True),
             threading.Thread(target=self.hx.start,      name='HX711',     daemon=True),
             threading.Thread(target=self.cam.start,     name='Camera',    daemon=True),
-            #threading.Thread(target=self.backup.start,  name='Backup',    daemon=True),
+            threading.Thread(target=self.backup.start,  name='Backup',    daemon=True),
         ]
         for t in threads:
             t.start()

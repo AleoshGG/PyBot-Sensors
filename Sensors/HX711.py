@@ -15,8 +15,8 @@ class HX711Reader:
         # self.hx.reset()
         # time.sleep(0.1)
         # raw = self.hx.get_raw_data(times=10)
-        self.offset = -356380.04# sum(raw)/len(raw) if raw else 0
-        self.scale = 101.6037
+        self.offset = 14664.59# sum(raw)/len(raw) if raw else 0
+        self.scale =  0.0388
 
     def start(self):
         while True:
