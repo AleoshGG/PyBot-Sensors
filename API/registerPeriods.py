@@ -99,8 +99,8 @@ class RegisterPeriods:
 
         d_body = {
             "period_id": self.last_period_id,
-            "distance_traveled": res.get('last_reading').get('distance_traveled'),
-            "weight_waste": res.get('last_reading').get('weight_waste'),
+            "distance_traveled": res.get('last_reading').get('distance_traveled') or 0.0,
+            "weight_waste": res.get('last_reading').get('weight_waste') or 0.0,
         }
 
         res = self.serviceWorkPeriods.updateLastReadig(d_body)

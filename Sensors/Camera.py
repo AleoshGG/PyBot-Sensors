@@ -1,8 +1,7 @@
 import base64
 import os
-import threading, cv2, torch
+import threading, cv2
 import time
-from ultralytics import YOLO
 from Sensors.WasteHandler import WasteHandler
 from MQTT.connection import RabbitMQPublisher
 

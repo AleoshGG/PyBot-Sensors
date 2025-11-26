@@ -2,7 +2,7 @@ import requests
 
 class SensorRegisterService:
     def __init__(self):
-        self.base_url = "http://127.0.0.1:8080/sensors"
+        self.base_url = "https://pybot.aleosh.online/sensors/workPeriods"
         self.session = requests.Session()
     
     def registerWeightData(self, payload: dict) -> requests.Response:

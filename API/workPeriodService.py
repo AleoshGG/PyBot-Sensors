@@ -2,7 +2,7 @@ import requests
 
 class WorkPeriodService:
     def __init__(self):
-        self.base_url = "http://127.0.0.1:8080/workPeriods"
+        self.base_url = "https://pybot.aleosh.online/sensors/workPeriods"
         self.session = requests.Session()
 
     def getLastHourPeriod(self) -> requests.Response:
