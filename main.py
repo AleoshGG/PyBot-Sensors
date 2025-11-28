@@ -27,7 +27,7 @@ if __name__ == '__main__':
     # Instanciar lectores
     gps = GPSReader(serviceRegister=r)
     hx = HX711Reader(serviceRegister=r, h=handler)
-    cam = CameraReader(h=handler)
+    cam = CameraReader(waste_handler=handler)
 
     # Backup
     backup = Backup()

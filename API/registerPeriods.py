@@ -97,10 +97,12 @@ class RegisterPeriods:
             id=str(self.last_period_id))
         print(res1)
 
+        last_reading = res.get('last_reading', {}) if res else {}
+
         d_body = {
             "period_id": self.last_period_id,
-            "distance_traveled": res.get('last_reading').get('distance_traveled') or 0.0,
-            "weight_waste": res.get('last_reading').get('weight_waste') or 0.0,
+            "distance_traveled": last_reading.get('distance_traveled', 0.0),
+            "weight_waste": last_reading.get('weight_waste', 0.0),
         }
 
         res = self.serviceWorkPeriods.updateLastReadig(d_body)

@@ -5,51 +5,37 @@ import os
 
 load_dotenv()
 
-RABBITMQ_HOST = os.getenv('RABBITMQ_HOST', 'localhost')
+# Configuración cargada una sola vez
+RABBITMQ_URL = os.getenv('RABBITMQ_URL')
 EXCHANGE_NAME = 'amq.topic'
-EXCHANGE_TYPE = 'topic'
 DEFAULT_ROUTING_KEY = os.getenv('MQTT_TOPIC', 'sensors.info')
-USER = os.getenv('RABBITMQ_USER')
-PASS = os.getenv('RABBITMQ_PASS')
 
 class RabbitMQPublisher:
     def __init__(self):
+        # Conexión directa sin try/except redundante
         try:
-            self.connection = pika.BlockingConnection(
-                pika.ConnectionParameters(
-                    host=RABBITMQ_HOST, 
-                    credentials=pika.PlainCredentials(
-                        username=USER, 
-                        password=PASS))
-            )
-
+            params = pika.URLParameters(RABBITMQ_URL)
+            self.connection = pika.BlockingConnection(params)
             self.channel = self.connection.channel()
-            self.channel.exchange_declare(
-                exchange=EXCHANGE_NAME,
-                exchange_type=EXCHANGE_TYPE,
-                durable=True
-            )
-            print("[RabbitMQ] Conectado y exchange declarado")
-        except Exception as e:
-            print(f"[RabbitMQ] Error al conectar o declarar exchange: {e}")
+            # No declarar exchange en cada conexión (asumimos que existe)
+        except:
             self.connection = None
 
     def send(self, payload: dict, routing_key: str = DEFAULT_ROUTING_KEY):
-        if not self.connection or self.connection.is_closed:
-            print("[RabbitMQ] Conexión no disponible")
-            return
+        # Verificación ultra mínima
+        if not self.connection:
+            return False
+            
         try:
-            message = json.dumps(payload)
             self.channel.basic_publish(
                 exchange=EXCHANGE_NAME,
                 routing_key=routing_key,
-                body=message
+                body=json.dumps(payload)
             )
-            # print(f"[RabbitMQ] Enviado {routing_key}:{message}")
-        except Exception as e:
-            print(f"[RabbitMQ] Error publicando mensaje: {e}")
+            return True
+        except:
+            return False
 
     def close(self):
-        if self.connection and self.connection.is_open:
+        if self.connection:
             self.connection.close()
-            print("[RabbitMQ] Conexión cerrada")
