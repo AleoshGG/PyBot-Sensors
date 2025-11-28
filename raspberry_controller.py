@@ -394,7 +394,7 @@ class RaspberryController:
         
         print("[CONTROLLER] ✅ Recursos liberados. Saliendo.")
 
-# Uso en tu main.py
+""" # Uso en tu main.py
 if __name__ == "__main__":
     # Ejemplo de uso
     from API.register_periods import RegisterPeriods  # Ajusta según tu estructura
@@ -405,4 +405,4 @@ if __name__ == "__main__":
         controller.start()
     except Exception as e:
         print(f"❌ Error iniciando aplicación: {e}")
-        GPIO.cleanup()  # Limpiar GPIO en caso de error
+        GPIO.cleanup()  # Limpiar GPIO en caso de error """
